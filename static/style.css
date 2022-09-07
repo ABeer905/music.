@@ -17,6 +17,10 @@ body{
     background-color: var(--bs-gray-dark);
 }
 
+img{
+    object-fit: fill;
+}
+
 .text-brand{
     color: var(--brand) !important;
 }
@@ -40,4 +44,13 @@ body{
 
 .playlist:hover{
     filter: brightness(120%);
+    transform: scale(1.01);
+}
+
+.edit-input{
+    color: white;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    cursor: pointer;
 }

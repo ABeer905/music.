@@ -5,6 +5,47 @@
         <link rel="stylesheet" href="../static/style.css"/>
     </head>
     <body>
+        <div class="modal fade" id="addPlaylist" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content bg-dark">
+                <div class="modal-header">
+                  <h5 class="modal-title text-light">Create Playlist</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <label id="missing-alert" class="text-danger" style="visibility: hidden;">Please fill out playlist <span id="missing-field"></span>.</label>
+                  <div class="mb-2">
+                    <label class="form-label text-light">Playlist Name</label>
+                    <input id="addName" type="text" class="form-control" />
+                  </div>
+                  <div>
+                    <label class="form-label text-light">Playlist Image</label>
+                    <input id="addImage" type="file" class="form-control" accept="image/png, image/gif, image/jpeg" />
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" onclick="createPlaylist()">Add Playlist</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="delPlaylist" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title text-light">Delete Playlist <span id="confirm-delete"></span>?</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete Playlist</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
         <nav id="nav" class="navbar navbar-dark bg-dark">
             <div class="container-fluid d-flex">
               <a class="navbar-brand text-brand" href="#">
@@ -28,12 +69,12 @@
         </nav>
 
         <div id="container" class="container-fluid d-flex flex-column mx-0 px-0">
-            <div id="content" class="flex-grow-1 container-fluid d-flex flex-column align-items-center pt-3">
-                <div class="w-75 resize-50 playlist btn btn-secondary bg-dark d-flex align-items-center py-3 rounded-3" style="border:none">
+            <div id="content" class="flex-grow-1 container-fluid d-flex flex-column align-items-center pt-3" style="overflow-y: scroll;">
+                <div class="w-75 resize-50 playlist btn btn-secondary bg-dark d-flex align-items-center py-3 rounded-3" style="border:none" data-bs-toggle="modal" data-bs-target="#addPlaylist">
                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
                         <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
                     </svg>
-                    <p class="display-6 flex-grow-1 text-start text-overflow" style="margin-left:1rem">Create Playlist</p>
+                    <input class="display-6 flex-grow-1 text-start text-overflow edit-input" value="Create Playlist" readonly/>
                 </div>
             </div>
 
