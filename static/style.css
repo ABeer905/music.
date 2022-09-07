@@ -1,0 +1,18 @@
+:root{
+    --brand: #8452e9;
+
+}
+
+@media screen and (min-width: 900px){
+    .resize-25{
+        max-width: 25%;
+    }
+}
+
+body{
+    background-color: var(--bs-gray-dark);
+}
+
+.text-brand{
+    color: var(--brand) !important;
+}
