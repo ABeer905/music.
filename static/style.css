@@ -3,9 +3,13 @@
 
 }
 
-@media screen and (min-width: 900px){
+@media screen and (min-width: 1200px){
     .resize-25{
         max-width: 25%;
+    }
+
+    .resize-50{
+        max-width: 50%;
     }
 }
 
@@ -15,4 +19,25 @@ body{
 
 .text-brand{
     color: var(--brand) !important;
+}
+
+.text-overflow{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.icon{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #b4b4b4;
+}
+
+.icon:hover{
+    filter: brightness(150%);
+}
+
+.playlist:hover{
+    filter: brightness(120%);
 }
