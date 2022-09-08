@@ -19,7 +19,7 @@ function createWindow (save) {
     registerAPI(save)
     win.maximize()
     win.loadFile(path.join("templates", "index.html"))
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {

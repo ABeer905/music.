@@ -3,6 +3,21 @@
 
 }
 
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #505050;
+    margin: 10px 0px 10px 0px;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--bs-dark);
+}
+
 @media screen and (min-width: 1200px){
     .resize-25{
         max-width: 25%;
@@ -19,6 +34,14 @@ body{
 
 img{
     object-fit: fill;
+}
+
+input[type="range"]{
+    accent-color: var(--bs-gray-dark);
+}
+
+#volume{
+    accent-color: var(--brand);
 }
 
 .text-brand{
