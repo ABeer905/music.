@@ -41,12 +41,14 @@ const createPlaylist = () => {
 }
 
 const editPlaylist = (name) => {
+    event.stopPropagation()
     const e = document.getElementById(`${name}-edit`)
     e.readOnly = false
     e.focus()
 }
 
 const delPlaylist = (name) => {
+    event.stopPropagation()
     document.getElementById("confirm-delete").innerText = name
     delPlaylistModal.show()
 }
