@@ -46,11 +46,14 @@ app.on('window-all-closed', () => {
 })
 
 const registerAPI = (save) => {
+    /*******Playlist API*******/
+    ipcMain.handle("getPlaylistData", (e, name) => save.playlists[name])
     ipcMain.handle("getAllPlaylists", () => save.playlists)
     ipcMain.handle("createPlaylist", (e, args) => {
         if(save.playlists.hasOwnProperty(args[0])) return null
         save.playlists[args[0]] = {
-            thumbnail: args[1]
+            thumbnail: args[1],
+            songs: {}
         }
         write(save)
         return save.playlists[args[0]]
@@ -65,6 +68,20 @@ const registerAPI = (save) => {
         delete save.playlists[name]
         write(save)
     })
+
+    /*******Song API*******/
+    ipcMain.handle("removeSong", (e, args) => {
+        delete save.playlists[args[1]].songs[args[0]]
+        write(save)
+    })
+    ipcMain.handle("addSong", (e, args) => {
+        save.playlists[args[3]].songs[args[0]] = {
+            "name": args[1],
+            "artist": args[2]
+        }
+        write(save)
+    })
+    ipcMain.handle("enqueue", (e, songID) => console.log(`song ${songID} enqueued`)) //TODO
 }
 
 const write = (save) => {

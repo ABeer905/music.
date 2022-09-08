@@ -54,3 +54,11 @@ img{
     border: none;
     cursor: pointer;
 }
+
+.playlist-transition{
+    transition: left 400ms ease-in-out;
+}
+
+.song{
+    cursor: pointer;
+}
