@@ -11,8 +11,9 @@ contextBridge.exposeInMainWorld("playlist", {
 
 contextBridge.exposeInMainWorld("song", {
     remove: (songID, playlistName) => ipcRenderer.invoke("removeSong", [songID, playlistName]),
-    add: (songID, name, artist, playlist) => ipcRenderer.invoke("addSong", [songID, name, artist, playlist]),
-    enqueue: (songID) => ipcRenderer.invoke("enqueue", songID)
+    add: (songID, name, artist, image, playlist) => ipcRenderer.invoke("addSong", [songID, name, artist, image, playlist]),
+    enqueue: (songID) => ipcRenderer.invoke("enqueue", songID),
+    search: (query) => ipcRenderer.invoke("searchSong", query)
 })
 
 const loadPlaylists = (playlists) => {

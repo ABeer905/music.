@@ -19,5 +19,8 @@
   "homepage": "https://github.com/ABeer905/music.#readme",
   "devDependencies": {
     "electron": "^20.1.1"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
   }
 }

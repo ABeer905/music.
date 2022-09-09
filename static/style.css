@@ -40,6 +40,17 @@ input[type="range"]{
     accent-color: var(--bs-gray-dark);
 }
 
+table {
+    table-layout:fixed !important;
+}
+
+td{
+    /* I have no idea why this prevents the col from overflowing the table but it does.
+        Actual column width appears to exceeds 10px but will prevent overflow */
+    max-width: 10px !important;
+    vertical-align: middle;
+}
+
 #volume{
     accent-color: var(--brand);
 }
@@ -52,6 +63,11 @@ input[type="range"]{
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.text-center{
+    width: 100%;
+    text-align: center;
 }
 
 .icon{

@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require("electron")
+const song = require("./song")
 const path = require("path")
 const fs = require("fs")
 
@@ -19,7 +20,7 @@ function createWindow (save) {
     registerAPI(save)
     win.maximize()
     win.loadFile(path.join("templates", "index.html"))
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
@@ -27,11 +28,13 @@ app.whenReady().then(() => {
     if(fs.existsSync(savePath)){
         save = require(savePath)
     }else{
+        keys = []
         save = {
             playlists: {}
         }
         write(save)
     }
+    song.init(save.keys)
     createWindow(save)
 
     app.on('activate', () => {
@@ -75,13 +78,15 @@ const registerAPI = (save) => {
         write(save)
     })
     ipcMain.handle("addSong", (e, args) => {
-        save.playlists[args[3]].songs[args[0]] = {
+        save.playlists[args[4]].songs[args[0]] = {
             "name": args[1],
-            "artist": args[2]
+            "artist": args[2],
+            "thumbnail": args[3]
         }
         write(save)
     })
     ipcMain.handle("enqueue", (e, songID) => console.log(`song ${songID} enqueued`)) //TODO
+    ipcMain.handle("searchSong", (e, query) => song.search(query))
 }
 
 const write = (save) => {
