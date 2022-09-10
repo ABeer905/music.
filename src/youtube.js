@@ -45,7 +45,8 @@ const getStreamDetails = async (html) => {
         if(streamObject.mimeType.includes("audio/mp4") && streamObject.audioQuality == "AUDIO_QUALITY_MEDIUM"){
             return {
                 stream: streamObject.hasOwnProperty("url") ? streamObject.url : await decipherStreamData(html, streamObject.signatureCipher),
-                length: parseInt(streamObject.approxDurationMs) / 1000
+                length: parseInt(streamObject.approxDurationMs) / 1000,
+                name: audioInfo.videoDetails.title
             }
         }
     }

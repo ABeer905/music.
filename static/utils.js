@@ -178,9 +178,9 @@ const search = async (event) => {
     if(!playlistFound){
         document.getElementById("no-playlists").innerText = query
         np.style.visibility = "visible"
-        pt.style.display = "none"
+        ptParent.style.display = "none"
     }else{
-        pt.style.display = ""
+        ptParent.style.display = ""
         np.style.visibility = "hidden"
     }
     ltParent.style.display = "none"

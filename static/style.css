@@ -75,6 +75,7 @@ td{
     border: none;
     outline: none;
     color: #b4b4b4;
+    transition: color 200ms
 }
 
 .icon:hover{
