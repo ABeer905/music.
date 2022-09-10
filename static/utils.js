@@ -2,7 +2,8 @@
 const createPlaylistModal = new bootstrap.Modal(document.getElementById('addPlaylist'))
 const delPlaylistModal = new bootstrap.Modal(document.getElementById('delPlaylist'))
 const addSongModal = new bootstrap.Modal(document.getElementById('addSongPlaylist'))
-const opsTemplate = '<button class="icon float-end" type="button" onclick="event.stopPropagation()" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></button><ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton1"><li><a class="dropdown-item" href="javascript:enqueue({id}, {name}, {artist}, {thumb})">Enqueue</a></li><li><a class="dropdown-item" href="javascript:addSong({id}, {name}, {artist}, {thumb})">Add to playlist</a></li><li><a class="dropdown-item" href="javascript:delSong({id})">Remove from playlist</a></li></ul>'
+const opsTemplate = '<button class="icon float-end" type="button" onclick="event.stopPropagation()" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></button><ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton1"><li><a class="dropdown-item" href="javascript:enqueue({id}, {name}, {artist}, {thumb})">Enqueue</a></li>{dequeue}<li><a class="dropdown-item" href="javascript:addSong({id}, {name}, {artist}, {thumb})">Add to playlist</a></li><li><a class="dropdown-item" href="javascript:delSong({id})">Remove from playlist</a></li></ul>'
+const dequeueOption = '<li><a class="dropdown-item" href="#" onclick="dequeue({i}, this)">Dequeue</a></li>'
 let playlistOpen = false
 let queueOpen = false
 
@@ -107,11 +108,14 @@ const insertSongs = (songs) => {
     highlightSong()
 }
 
-const htmlFromSong = (song, songID, i) => {
+const htmlFromSong = (song, songID, i, showDequeue=false) => {
     let ops = opsTemplate.replaceAll("{id}", `'${songID}'`)
+    ops = ops.replace("{dequeue}", showDequeue ? dequeueOption : "")
+    ops = ops.replace("{i}", i)
     ops = ops.replaceAll("{name}", `'${song.name.replaceAll(/(&#39;|')/g, "\\\'")}'`)
     ops = ops.replaceAll("{artist}", `'${song.artist.replaceAll(/(&#39;|')/g, "\\\'")}'`)
     ops = ops.replaceAll("{thumb}", `'${song.thumbnail.replaceAll(/(&#39;|')/g, "\\\'")}'`)
+
     const row = document.createElement("tr")
     row.id = songID
     row.setAttribute("onclick", "if(event.target.nodeName != 'A')startSong(this)")
@@ -159,6 +163,13 @@ const enqueue = (songID, name, artist, thumb) => window.song.enqueue({
     artist: artist,
     thumb: thumb
 }, true, false)
+
+const dequeue = async (i, node) => {
+    const row = node.parentNode.parentNode.parentNode.parentNode
+    const priority = document.getElementById("prio-container").children[i] == row
+    await window.song.dequeue(i, priority)
+    buildQueue()
+}
 
 const search = async (event) => {
     const query = searchbar.value.toLowerCase()
@@ -245,14 +256,14 @@ const buildQueue = async () => {
             name: song.name,
             artist: song.artist,
             thumbnail: song.thumb
-        }, song.id, i))
+        }, song.id, i, showDequeue=true))
     })
     queue.standard.forEach((song, i) => {
         qc.appendChild(htmlFromSong({
             name: song.name,
             artist: song.artist,
             thumbnail: song.thumb
-        }, song.id, i))
+        }, song.id, i, showDequeue=true))
     })
     highlightSong()
 

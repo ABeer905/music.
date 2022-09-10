@@ -119,39 +119,6 @@
                 </div>
             </div>
 
-            <div id="queue-content" class="position-absolute flex-grow-1 container-fluid d-flex justify-content-center queue-transition" style="background-color: var(--bs-gray-dark)">
-                <div class="w-75 resize-50 pt-5 px-5 bg-dark" style="filter: brightness(1.1);white-space:nowrap;overflow-y: scroll;">
-                    <h1 id="playlist-title" class="text-light text-overflow mt-1">Queue</h1>
-                    <h4 id="playlist-title" class="text-light text-overflow mt-1">Next up in queue</h4>
-                    <table id="pqt" class="table table-dark table-hover">
-                        <thead>
-                            <tr>
-                                <th style="width:4% !important">#</th>
-                                <th style="width:60px !important"></th>
-                                <th style="width: 40% !important;">Title</th>
-                                <th style="width: 40% !important;">Artist</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="prio-container"></tbody>
-                    </table>
-                    <p id="npq" class="text-light text-center" style="visibility:hidden">No songs in queue</p>
-                    <h4 id="playlist-title" class="text-light text-overflow mt-1">Next from <span id="next-spot"></span></h4>
-                    <table id="qt" class="table table-dark table-hover">
-                        <thead>
-                            <tr>
-                                <th style="width:4% !important">#</th>
-                                <th style="width:60px !important"></th>
-                                <th style="width: 40% !important;">Title</th>
-                                <th style="width: 40% !important;">Artist</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="q-container"></tbody>
-                    </table>
-                </div>
-            </div>
-
             <div id="search-content" class="position-absolute flex-grow-1 container-fluid justify-content-center" style="background-color: var(--bs-gray-dark);display:none;">
                 <div class="w-75 resize-50 pt-5 px-5 bg-dark" style="filter: brightness(1.1);white-space:nowrap;overflow-y: scroll;">
                     <h3 class="text-light">Live Search Results</h3>
@@ -196,6 +163,39 @@
                         <tbody id="pt"></tbody>
                     </table>
                     <p id="np" class="text-light text-center" style="visibility:hidden">No saved playlists found for "<span id="no-playlists"></span>"</p>
+                </div>
+            </div>
+
+            <div id="queue-content" class="position-absolute flex-grow-1 container-fluid d-flex justify-content-center queue-transition" style="background-color: var(--bs-gray-dark)">
+                <div class="w-75 resize-50 pt-5 px-5 bg-dark" style="filter: brightness(1.1);white-space:nowrap;overflow-y: scroll;">
+                    <h1 id="playlist-title" class="text-light text-overflow mt-1">Queue</h1>
+                    <h4 id="playlist-title" class="text-light text-overflow mt-1">Next up in queue</h4>
+                    <table id="pqt" class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width:4% !important">#</th>
+                                <th style="width:60px !important"></th>
+                                <th style="width: 40% !important;">Title</th>
+                                <th style="width: 40% !important;">Artist</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="prio-container"></tbody>
+                    </table>
+                    <p id="npq" class="text-light text-center" style="visibility:hidden">No songs in queue</p>
+                    <h4 id="playlist-title" class="text-light text-overflow mt-1">Next from <span id="next-spot"></span></h4>
+                    <table id="qt" class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width:4% !important">#</th>
+                                <th style="width:60px !important"></th>
+                                <th style="width: 40% !important;">Title</th>
+                                <th style="width: 40% !important;">Artist</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="q-container"></tbody>
+                    </table>
                 </div>
             </div>
 

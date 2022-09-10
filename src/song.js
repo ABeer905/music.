@@ -27,6 +27,10 @@ exports.enqueue = (song, prio, clear, name) => {
     }
 }
 
+exports.dequeue = (i, priority) => {
+    priority ? prioQueue.splice(i, 1) : queue.splice(i, 1)
+}
+
 exports.next = (priority) => {
     if(trackingHistoryIndex >= 0){
         trackingHistoryIndex++
@@ -37,9 +41,9 @@ exports.next = (priority) => {
             return history[trackingHistoryIndex].id
         }
     }else if(prioQueue.length || queue.length){
-        const id = (prioQueue.length && priority) ? prioQueue.shift().id : queue.shift().id
-        history.push(id)
-        return id 
+        const song = (prioQueue.length && priority) ? prioQueue.shift() : queue.shift()
+        history.push(song)
+        return song.id 
     }
 }
 
