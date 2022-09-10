@@ -17,6 +17,7 @@ contextBridge.exposeInMainWorld("song", {
     getQueue: () => ipcRenderer.invoke("getQueue"),
     next: (priority=true) => ipcRenderer.invoke("nextSong", priority),
     prev: () => ipcRenderer.invoke("prevSong"),
+    shuffle: (shouldShuffle) => ipcRenderer.invoke("shuffle", shouldShuffle),
     search: (query) => ipcRenderer.invoke("searchSong", query),
     getStream: (songID) => ipcRenderer.invoke("getStream", songID)
 })

@@ -90,6 +90,7 @@ const registerAPI = (save) => {
     ipcMain.handle("getQueue", () => song.getQueue())
     ipcMain.handle("nextSong", (e, priority) => song.next(priority))
     ipcMain.handle("prevSong", () => song.prev())
+    ipcMain.handle("shuffle", (e, shouldShuffle) => song.shuffle(shouldShuffle))
     ipcMain.handle("searchSong", (e, query) => song.search(query))
     ipcMain.handle("getStream", async (e, songID) => await song.getStream(songID))
 }

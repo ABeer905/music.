@@ -5,9 +5,11 @@
 const youtube = require("./youtube")
 var queue = []
 var prioQueue = []
+var shuffleQueue = []
 var history = []
 var trackingHistoryIndex = -1
 var playlistName = ""
+var isShuffle = false
 
 exports.init = (keys) => youtube.init(keys)
 exports.search = (query) => youtube.search(query) 
@@ -17,6 +19,7 @@ exports.enqueue = (song, prio, clear, name) => {
     if(name) playlistName = name
     if(clear){
         queue = []
+        shuffleQueue = []
         history = []
     }
 
@@ -41,7 +44,14 @@ exports.next = (priority) => {
             return history[trackingHistoryIndex].id
         }
     }else if(prioQueue.length || queue.length){
-        const song = (prioQueue.length && priority) ? prioQueue.shift() : queue.shift()
+        var song
+        if(prioQueue.length && priority){
+            song = prioQueue.shift()
+        }else if(isShuffle){
+            song = shuffleQueue.shift()
+        }else{
+            song = queue.shift()
+        }
         history.push(song)
         return song.id 
     }
@@ -61,10 +71,23 @@ exports.prev = () => {
     }
 }
 
+exports.shuffle = (shouldShuffle) => {
+    if(shouldShuffle){
+        isShuffle = true
+        shuffleQueue = queue.slice(0)
+        for (let i = shuffleQueue.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffleQueue[i], shuffleQueue[j]] = [shuffleQueue[j], shuffleQueue[i]];
+        }
+    }else{
+        isShuffle = false
+    }
+}
+
 exports.getQueue = () => {
     return {
         priority: prioQueue,
-        standard: queue,
+        standard: isShuffle ? shuffleQueue : queue,
         name: playlistName
     }
 }

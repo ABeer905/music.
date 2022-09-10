@@ -55,9 +55,11 @@ repeatBtn.onclick = () => {
     repeat = !repeat
 }
 
-shuffleBtn.onclick = () => {
-    shuffle ? shuffleBtn.style.color = "" : shuffleBtn.style.color = "var(--brand)"
+shuffleBtn.onclick = async () => {
     shuffle = !shuffle
+    shuffleBtn.style.color = shuffle ? "var(--brand)" : ""
+    await window.song.shuffle(shuffle)
+    buildQueue()
 }
 
 //Helper functions
@@ -84,6 +86,7 @@ const startSong = async (row) => {
         nextSong = nextSong.nextElementSibling
         clear = false
     }
+    if(shuffle) window.song.shuffle(true)
     play(await window.song.next(priority=false))
 }
 

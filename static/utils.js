@@ -238,7 +238,6 @@ const search = async (event) => {
 }
 
 const showQueue = () => {
-    const pq = document.getElementById("queue-content")
     queueOpen = !queueOpen
     resize(true)
     if(queueOpen) buildQueue()
