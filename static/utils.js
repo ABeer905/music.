@@ -2,25 +2,37 @@
 const createPlaylistModal = new bootstrap.Modal(document.getElementById('addPlaylist'))
 const delPlaylistModal = new bootstrap.Modal(document.getElementById('delPlaylist'))
 const addSongModal = new bootstrap.Modal(document.getElementById('addSongPlaylist'))
-const opsTemplate = '<button class="icon float-end" type="button" onclick="event.stopPropagation()" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></button><ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton1"><li><a class="dropdown-item" href="javascript:enqueue({id})">Enqueue</a></li><li><a class="dropdown-item" href="javascript:addSong({id}, {name}, {artist}, {thumb})">Add to playlist</a></li><li><a class="dropdown-item" href="javascript:delSong({id})">Remove from playlist</a></li></ul>'
+const opsTemplate = '<button class="icon float-end" type="button" onclick="event.stopPropagation()" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></button><ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton1"><li><a class="dropdown-item" href="javascript:enqueue({id}, {name}, {artist}, {thumb})">Enqueue</a></li><li><a class="dropdown-item" href="javascript:addSong({id}, {name}, {artist}, {thumb})">Add to playlist</a></li><li><a class="dropdown-item" href="javascript:delSong({id})">Remove from playlist</a></li></ul>'
 let playlistOpen = false
+let queueOpen = false
 
 window.playlist.listAll()
 
 const resize = (transition=false) => {
     container.style.height = `${window.innerHeight - nav.getBoundingClientRect().height}px`
     const pc = document.getElementById("playlist-content")
+    const pq = document.getElementById("queue-content")
     const sc = document.getElementById("search-content")
     const bounds = content.getBoundingClientRect()
+    if(transition){
+        pc.classList.add("playlist-transition")
+        pq.classList.add("queue-transition")
+    }else{
+        pc.classList.remove("playlist-transition")
+        pq.classList.remove("queue-transition")
+    }
+
     pc.style.width = `${bounds.width}px`
     pc.style.height = `${bounds.height}px`
-    transition ? pc.classList.add("playlist-transition") : pc.classList.remove("playlist-transition")
     pc.style.left = `${playlistOpen ? bounds.left : bounds.right}px`
     sc.style.width = `${bounds.width}px`
     sc.style.height = `${bounds.height}px`
     preview.style.bottom = `${window.innerHeight - document.getElementById("media-controls").getBoundingClientRect().top + 10}px`
     preview.style.left = `${document.getElementById("song-name-highlight").getBoundingClientRect().left}px`
     preview.style.width = `${document.getElementById("song-name-highlight").getBoundingClientRect().width}px`
+    pq.style.bottom = `${queueOpen ? window.innerHeight - document.getElementById("media-controls").getBoundingClientRect().top : window.innerHeight - nav.getBoundingClientRect().bottom}px`
+    pq.style.width = `${bounds.width}px`
+    pq.style.height = `${bounds.height}px`
 }
 resize()
 
@@ -81,6 +93,7 @@ const openPlaylist = async (playlistContainer) => {
 
 const closePlaylist = () => {
     playlistOpen = false
+    queueOpen = false
     document.getElementById("search-content").style.display = "none"
     resize(transition=true)
 }
@@ -98,7 +111,7 @@ const htmlFromSong = (song, songID, i) => {
     let ops = opsTemplate.replaceAll("{id}", `'${songID}'`)
     ops = ops.replaceAll("{name}", `'${song.name.replaceAll(/(&#39;|')/g, "\\\'")}'`)
     ops = ops.replaceAll("{artist}", `'${song.artist.replaceAll(/(&#39;|')/g, "\\\'")}'`)
-    ops = ops.replace("{thumb}", `'${song.thumbnail.replaceAll(/(&#39;|')/g, "\\\'")}'`)
+    ops = ops.replaceAll("{thumb}", `'${song.thumbnail.replaceAll(/(&#39;|')/g, "\\\'")}'`)
     const row = document.createElement("tr")
     row.id = songID
     row.setAttribute("onclick", "if(event.target.nodeName != 'A')startSong(this)")
@@ -140,7 +153,12 @@ const confirmAddSong = () => {
     window.song.add(submit.dataset.id, submit.dataset.name, submit.dataset.artist, submit.dataset.img, playlist)
 }
 
-const enqueue = (songID) => window.song.enqueue(songID, true, false)
+const enqueue = (songID, name, artist, thumb) => window.song.enqueue({
+    id: songID,
+    name: name,
+    artist: artist,
+    thumb: thumb
+}, true, false)
 
 const search = async (event) => {
     const query = searchbar.value.toLowerCase()
@@ -206,4 +224,45 @@ const search = async (event) => {
         })
     }
     highlightSong()
+}
+
+const showQueue = () => {
+    const pq = document.getElementById("queue-content")
+    queueOpen = !queueOpen
+    resize(true)
+    if(queueOpen) buildQueue()
+}
+
+const buildQueue = async () => {
+    const queue = await window.song.getQueue()
+    document.getElementById("next-spot").innerText = queue.name
+    const pq = document.getElementById("prio-container")
+    const qc = document.getElementById("q-container")
+    pq.replaceChildren()
+    qc.replaceChildren()
+    queue.priority.forEach((song, i) => {
+        pq.appendChild(htmlFromSong({
+            name: song.name,
+            artist: song.artist,
+            thumbnail: song.thumb
+        }, song.id, i))
+    })
+    queue.standard.forEach((song, i) => {
+        qc.appendChild(htmlFromSong({
+            name: song.name,
+            artist: song.artist,
+            thumbnail: song.thumb
+        }, song.id, i))
+    })
+    highlightSong()
+
+    if(pq.children.length > 0){
+        npq.style.visibility = "hidden"
+        pqt.style.display = ""
+    }else{
+        npq.style.visibility = "visible"
+        pqt.style.display = "none"
+    }
+
+    qt.style.display = qc.children.length > 0 ? "" : "none"
 }

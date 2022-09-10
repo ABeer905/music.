@@ -64,8 +64,23 @@ shuffleBtn.onclick = () => {
 const startSong = async (row) => {
     let nextSong = row
     let clear = true
+    let name
+    if(row.parentNode.id == "song-container"){
+        name = document.getElementById("playlist-title").innerText
+    }else if(row.parentNode.id == "lt"){
+        name = "Search"
+    }else if(row.parentNode.id == "st"){
+        name = "Saved Songs"
+    }
+
     while(nextSong){
-        window.song.enqueue(nextSong.id, false, clear)
+        const song = {
+            id: nextSong.id,
+            name: nextSong.children[2].innerText,
+            artist: nextSong.children[3].innerText,
+            thumb: nextSong.children[1].firstElementChild.src
+        }
+        window.song.enqueue(song, false, clear, name)
         nextSong = nextSong.nextElementSibling
         clear = false
     }
@@ -78,8 +93,12 @@ const play = async (id) => {
     timeHi.innerText = timeToStr(stream.length)
     preview.src = stream.thumb
     document.getElementById("song-name-highlight").innerText = stream.name
-    document.getElementById("media-controls").style.display = "flex"
-    resize()
+    const mc = document.getElementById("media-controls")
+    if(mc.style.display != "flex"){
+        mc.style.display = "flex"
+        resize()
+    }
+    buildQueue()
     highlightSong()
     player.src = stream.stream
     player.play()
@@ -96,7 +115,8 @@ const timeToStr = (seconds) => {
 
 const highlightSong = () => {
     if(stream){
-        const songs = [...st.children, ...lt.children, ...document.getElementById("song-container").children]
+        const songs = [...st.children, ...lt.children, ...document.getElementById("song-container").children,
+                        ...document.getElementById("prio-container").children, ...document.getElementById("q-container").children]
         songs.forEach((song) => {
             song.style.color = song.id == stream.id ? "var(--brand)" : ""
         })

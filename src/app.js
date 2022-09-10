@@ -85,8 +85,9 @@ const registerAPI = (save) => {
         }
         write(save)
     })
-    ipcMain.handle("enqueue", (e, args) => song.enqueue(args[0], args[1], args[2]))
-    ipcMain.handle("nextSong", (priority) => song.next(priority))
+    ipcMain.handle("enqueue", (e, args) => song.enqueue(args[0], args[1], args[2], args[3]))
+    ipcMain.handle("getQueue", () => song.getQueue())
+    ipcMain.handle("nextSong", (e, priority) => song.next(priority))
     ipcMain.handle("prevSong", () => song.prev())
     ipcMain.handle("searchSong", (e, query) => song.search(query))
     ipcMain.handle("getStream", async (e, songID) => await song.getStream(songID))

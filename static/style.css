@@ -103,6 +103,10 @@ td{
     transition: left 400ms ease-in-out;
 }
 
+.queue-transition{
+    transition: bottom 250ms ease-in-out;
+}
+
 .song{
     cursor: pointer;
 }
