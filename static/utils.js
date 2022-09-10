@@ -171,7 +171,8 @@ const dequeue = async (i, node) => {
     buildQueue()
 }
 
-const search = async (event) => {
+const search = async (live=false) => {
+    console.log("here")
     const query = searchbar.value.toLowerCase()
     document.getElementById("search-content").style.display =  query == "" ? "none" : "flex"
     const playlists = await window.playlist.getAll()
@@ -218,7 +219,7 @@ const search = async (event) => {
     }
     ltParent.style.display = "none"
     enter.style.display = ""
-    if(event.key == "Enter"){
+    if(live){
         lt.replaceChildren()
         const songs = await window.song.search(query)
         if(songs.length == 0){
