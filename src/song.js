@@ -22,7 +22,7 @@ exports.enqueue = (songID, deep, clear) => {
 }
 
 exports.next = () => {
-    if(queuedSong && queuedSong.next){
+    if(queuedSong){
         const id = queuedSong.id
         queuedSong = queuedSong.next
         return id
@@ -33,7 +33,10 @@ exports.prev = () => {
     if(queuedSong && queuedSong.prev){
         const id = queuedSong.prev.prev ? queuedSong.prev.prev.id : queuedSong.prev.id
         queuedSong = queuedSong.prev
-        console.log(queuedSong.id)
+        return id
+    }else if(!queuedSong && queueTail && queueTail.prev){
+        const id = queueTail.prev.id
+        queuedSong = queueTail.prev
         return id
     }
 }

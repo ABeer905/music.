@@ -21,6 +21,7 @@ player.ontimeupdate = () => {
 player.onended = async () => {
     if(repeat){
         player.currentTime = 0
+        player.play()
     }else{
         next()
     }
@@ -72,12 +73,14 @@ const startSong = (row) => {
 }
 
 const play = async (id) => {
-    console.log(id)
     stream = await window.song.getStream(id)
+    stream["id"] = id
     timeHi.innerText = timeToStr(stream.length)
+    preview.src = stream.thumb
     document.getElementById("song-name-highlight").innerText = stream.name
     document.getElementById("media-controls").style.display = "flex"
     resize()
+    highlightSong()
     player.src = stream.stream
     player.play()
 }
@@ -89,4 +92,13 @@ const timeToStr = (seconds) => {
     const minutes = parseInt(seconds / 60)
     const s = parseInt(seconds % 60)
     return `${minutes < 10 ? `0${minutes}` : minutes}:${s < 10 ? `0${s}` : s}`
+}
+
+const highlightSong = () => {
+    if(stream){
+        const songs = [...st.children, ...lt.children, ...document.getElementById("song-container").children]
+        songs.forEach((song) => {
+            song.style.color = song.id == stream.id ? "var(--brand)" : ""
+        })
+    }
 }

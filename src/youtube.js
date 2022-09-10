@@ -46,7 +46,8 @@ const getStreamDetails = async (html) => {
             return {
                 stream: streamObject.hasOwnProperty("url") ? streamObject.url : await decipherStreamData(html, streamObject.signatureCipher),
                 length: parseInt(streamObject.approxDurationMs) / 1000,
-                name: audioInfo.videoDetails.title
+                name: audioInfo.videoDetails.title,
+                thumb: audioInfo.videoDetails.thumbnail.thumbnails[audioInfo.videoDetails.thumbnail.thumbnails.length - 1].url
             }
         }
     }

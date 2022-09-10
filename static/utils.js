@@ -2,7 +2,7 @@
 const createPlaylistModal = new bootstrap.Modal(document.getElementById('addPlaylist'))
 const delPlaylistModal = new bootstrap.Modal(document.getElementById('delPlaylist'))
 const addSongModal = new bootstrap.Modal(document.getElementById('addSongPlaylist'))
-const opsTemplate = '<button class="icon float-end" type="button" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></button><ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton1"><li><a class="dropdown-item" href="javascript:enqueue({id})">Enqueue</a></li><li><a class="dropdown-item" href="javascript:addSong({id}, {name}, {artist}, {thumb})">Add to playlist</a></li><li><a class="dropdown-item" href="javascript:delSong({id})">Remove from playlist</a></li></ul>'
+const opsTemplate = '<button class="icon float-end" type="button" onclick="event.stopPropagation()" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></button><ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton1"><li><a class="dropdown-item" href="javascript:event.stopPropagation();enqueue({id})">Enqueue</a></li><li><a class="dropdown-item" href="javascript:addSong({id}, {name}, {artist}, {thumb})" onclick="event.stopPropagation();">Add to playlist</a></li><li><a class="dropdown-item" href="javascript:event.stopPropagation();delSong({id})">Remove from playlist</a></li></ul>'
 let playlistOpen = false
 
 window.playlist.listAll()
@@ -18,6 +18,9 @@ const resize = (transition=false) => {
     pc.style.left = `${playlistOpen ? bounds.left : bounds.right}px`
     sc.style.width = `${bounds.width}px`
     sc.style.height = `${bounds.height}px`
+    preview.style.bottom = `${window.innerHeight - document.getElementById("media-controls").getBoundingClientRect().top + 10}px`
+    preview.style.left = `${document.getElementById("song-name-highlight").getBoundingClientRect().left}px`
+    preview.style.width = `${document.getElementById("song-name-highlight").getBoundingClientRect().width}px`
 }
 resize()
 
@@ -88,13 +91,14 @@ const insertSongs = (songs) => {
         const html = htmlFromSong(songs[song], song, i)
         document.getElementById("song-container").appendChild(html)
     })
+    highlightSong()
 }
 
 const htmlFromSong = (song, songID, i) => {
     let ops = opsTemplate.replaceAll("{id}", `'${songID}'`)
-    ops = ops.replace("{name}", `'${song.name}'`)
-    ops = ops.replaceAll("{artist}", `'${song.artist}'`)
-    ops = ops.replace("{thumb}", `'${song.thumbnail}'`)
+    ops = ops.replaceAll("{name}", `'${song.name.replaceAll("&#39;", "\\\'")}'`)
+    ops = ops.replaceAll("{artist}", `'${song.artist.replaceAll("&#39;", "\'")}'`)
+    ops = ops.replace("{thumb}", `'${song.thumbnail.replaceAll("&#39;", "\\'")}'`)
     const row = document.createElement("tr")
     row.id = songID
     row.setAttribute("onclick", "startSong(this)")
@@ -201,4 +205,5 @@ const search = async (event) => {
             lt.appendChild(htmlFromSong(song, song.id, i))
         })
     }
+    highlightSong()
 }

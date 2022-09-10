@@ -26,6 +26,10 @@
     .resize-50{
         max-width: 50%;
     }
+
+    .show-thumb{
+        display: block !important;
+    }
 }
 
 body{

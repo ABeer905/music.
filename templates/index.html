@@ -99,9 +99,9 @@
             </div>
         </nav>
 
-        <div id="container" class="container-fluid d-flex flex-column mx-0 px-0">
+        <div id="container" class="container-fluid position-relative d-flex flex-column mx-0 px-0">
             <div id="playlist-content" class="position-absolute flex-grow-1 container-fluid d-flex justify-content-center" style="background-color: var(--bs-gray-dark)">
-                <div class="w-75 resize-50 pt-5 px-5 bg-dark" style="filter: brightness(1.1);">
+                <div class="w-75 resize-50 pt-5 px-5 bg-dark" style="filter: brightness(1.1);white-space:nowrap;overflow-y: scroll;">
                     <img id="playlist-img" src="" width="200" height="200" />
                     <h1 id="playlist-title" class="text-light text-overflow mt-1"></h1>
                     <table class="table table-dark table-hover">
@@ -120,7 +120,7 @@
             </div>
 
             <div id="search-content" class="position-absolute flex-grow-1 container-fluid justify-content-center" style="background-color: var(--bs-gray-dark);display:none;">
-                <div class="w-75 resize-50 pt-5 px-5 bg-dark" style="filter: brightness(1.1);overflow-y:scroll;">
+                <div class="w-75 resize-50 pt-5 px-5 bg-dark" style="filter: brightness(1.1);white-space:nowrap;overflow-y: scroll;">
                     <h3 class="text-light">Live Search Results</h3>
                     <p id="enter" class="text-light">Press "Enter" to see live search results</p>
                     <table id="ltParent" class="table table-dark table-hover w-100" style="display:none;">
@@ -175,9 +175,10 @@
                 </div>
             </div>
 
-            <div id="media-controls" class="container-fluid bg-dark align-items-center py-1 px-5" style="display:none">
-                <label id="song-name-highlight" class="text-overflow text-brand" style="font-size: 1.5rem;width:12.5%">An example song</label>
-                <div class="w-75 d-flex justify-content-center align-items-center flex-column px-5">
+            <div id="media-controls" class="container-fluid bg-dark align-items-center py-1 px-5" style="display:none;">
+                <img id="preview" src="" class="show-thumb position-fixed img-thumbnail" style="left:10px;display:none" width="200" height="auto"/>
+                <label id="song-name-highlight" class="text-overflow text-brand" style="font-size: 1.5rem;width:20%">An example song</label>
+                <div class="d-flex justify-content-center align-items-center flex-column px-5" style="width: 60%;">
                     <div>
                         <button id="shuffleBtn" class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
@@ -206,21 +207,31 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="d-flex w-100 align-items-center">
+                    <div class="d-flex w-100 align-items-bottom">
                         <p id="timeLo" class="text-light">00:00</p>
                         <input id="time" type="range" min="0" max="1000" value="0" class=" mx-3 flex-grow-1"/>
                         <p id="timeHi" class="text-light">99:99</p>
                     </div>
                 </div>
-                <div id="volc" class="text-light d-flex align-items-center justify-content-between" style="width:12.5%;">
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-volume-up-fill" viewBox="0 0 16 16">
-                            <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
-                            <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
-                            <path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
-                        </svg>
-                    </span>
-                    <input id="volume" type="range" min="0" max="100" value="100" class="flex-grow-1" style="margin-left:1rem"/>
+                <div class="d-flex" style="width:20%;">
+                    <button class="icon" style="margin-right:1rem">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">
+                            <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
+                            <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
+                            <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
+                            <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+                          </svg>
+                    </button>
+                    <div id="volc" class="text-light flex-grow-1 d-flex align-items-center justify-content-between">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-volume-up-fill" viewBox="0 0 16 16">
+                                <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
+                                <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
+                                <path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
+                            </svg>
+                        </span>
+                        <input id="volume" type="range" min="0" max="100" value="100" class="flex-grow-1" style="margin-left:1rem"/>
+                    </div>
                 </div>
             </div>
         </div>
