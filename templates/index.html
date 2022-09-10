@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="../static/style.css"/>
     </head>
     <body style="overflow: hidden;">
+        <audio id="player" src=""></audio>
         <div class="modal fade" id="addPlaylist" tabindex="-1">
             <div class="modal-dialog">
               <div class="modal-content bg-dark">
@@ -189,7 +190,7 @@
                                 <path d="M.5 3.5A.5.5 0 0 0 0 4v8a.5.5 0 0 0 1 0V8.753l6.267 3.636c.54.313 1.233-.066 1.233-.697v-2.94l6.267 3.636c.54.314 1.233-.065 1.233-.696V4.308c0-.63-.693-1.01-1.233-.696L8.5 7.248v-2.94c0-.63-.692-1.01-1.233-.696L1 7.248V4a.5.5 0 0 0-.5-.5z"/>
                             </svg>
                         </button>
-                        <button class="icon">
+                        <button id="playBtn" class="icon" onclick="player.paused ? player.play() : player.pause()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
                                 <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
                             </svg>
@@ -223,5 +224,6 @@
         </div>
         <script src="../static/bootstrap.bundle.min.js"></script>
         <script src="../static/utils.js"></script>
+        <script src="../static/utilsAudio.js"></script>
     </body>
 </html>

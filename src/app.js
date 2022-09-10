@@ -87,6 +87,7 @@ const registerAPI = (save) => {
     })
     ipcMain.handle("enqueue", (e, songID) => console.log(`song ${songID} enqueued`)) //TODO
     ipcMain.handle("searchSong", (e, query) => song.search(query))
+    ipcMain.handle("getStream", async (e, songID) => await song.getStream(songID))
 }
 
 const write = (save) => {

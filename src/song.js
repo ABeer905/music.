@@ -6,3 +6,6 @@ const youtube = require("./youtube")
 
 exports.init = (keys) => youtube.init(keys)
 exports.search = (query) => youtube.search(query) 
+exports.getStream = async (songID) => {
+    return await youtube.getStream(songID)
+}

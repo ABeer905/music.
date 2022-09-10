@@ -97,6 +97,7 @@ const htmlFromSong = (song, songID, i) => {
     ops = ops.replace("{thumb}", `'${song.thumbnail}'`)
     const row = document.createElement("tr")
     row.id = songID
+    row.setAttribute("onclick", "startSong(this)")
     row.setAttribute("class", "song")
     row.innerHTML = `<td class="text-overflow">${i+1}</td>` +
                     `<td><img src="${song.thumbnail}" width="40" height="40"/></td>` + 
@@ -197,7 +198,6 @@ const search = async (event) => {
             nl.style.visibility = "hidden"
         }
         songs.forEach((song, i) => {
-            console.log("oi2")
             lt.appendChild(htmlFromSong(song, song.id, i))
         })
     }
