@@ -18,6 +18,13 @@ player.ontimeupdate = () => {
         timeLo.innerText = timeToStr(player.currentTime)
     }
 }
+player.onended = async () => {
+    if(repeat){
+        player.currentTime = 0
+    }else{
+        next()
+    }
+}
 
 time.oninput = () => {
     timeDragging = true
@@ -55,14 +62,17 @@ shuffleBtn.onclick = () => {
 //Helper functions
 const startSong = (row) => {
     let nextSong = row.nextElementSibling
+    let clear = true
     while(nextSong){
-        window.song.enqueue(nextSong.id)
+        window.song.enqueue(nextSong.id, false, clear)
         nextSong = nextSong.nextElementSibling
+        clear = false
     }
     play(row.id)
 }
 
 const play = async (id) => {
+    console.log(id)
     stream = await window.song.getStream(id)
     timeHi.innerText = timeToStr(stream.length)
     document.getElementById("song-name-highlight").innerText = stream.name
@@ -71,6 +81,9 @@ const play = async (id) => {
     player.src = stream.stream
     player.play()
 }
+
+const next = async () => play(await window.song.next())
+const prev = async () => play(await window.song.prev())
 
 const timeToStr = (seconds) => {
     const minutes = parseInt(seconds / 60)
