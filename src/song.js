@@ -3,41 +3,55 @@
  */
 
 const youtube = require("./youtube")
-const priorityQueue = []
-var queuedSong
-var queueTail
+var queue = []
+var prioQueue = []
+var history = []
+var trackingHistoryIndex = -1
 
 exports.init = (keys) => youtube.init(keys)
 exports.search = (query) => youtube.search(query) 
 exports.getStream = async (songID) => await youtube.getStream(songID)
 
-exports.enqueue = (songID, deep, clear) => {
-    if(queueTail && !clear){
-        queueTail.next = {id: songID, next: null, prev: queueTail}
-        queueTail = queueTail.next
+exports.enqueue = (songID, prio, clear) => {
+    if(clear){
+        queue = []
+        history = []
+    }
+
+    if(prio){
+        prioQueue.push(songID)
     }else{
-        queuedSong = {id: songID, next: null, prev: null}
-        queueTail = queuedSong
+        queue.push(songID)
     }
 }
 
-exports.next = () => {
-    if(queuedSong){
-        const id = queuedSong.id
-        queuedSong = queuedSong.next
-        return id
+exports.next = (priority) => {
+    if(trackingHistoryIndex >= 0){
+        trackingHistoryIndex++
+        if(trackingHistoryIndex >= history.length){
+            trackingHistoryIndex = -1
+            next()
+        }else{
+            return history[trackingHistoryIndex]
+        }
+    }else if(prioQueue.length || queue.length){
+        const id = (prioQueue.length && priority) ? prioQueue.shift() : queue.shift()
+        history.push(id)
+        return id 
     }
 }
 
 exports.prev = () => {
-    if(queuedSong && queuedSong.prev){
-        const id = queuedSong.prev.prev ? queuedSong.prev.prev.id : queuedSong.prev.id
-        queuedSong = queuedSong.prev
-        return id
-    }else if(!queuedSong && queueTail && queueTail.prev){
-        const id = queueTail.prev.id
-        queuedSong = queueTail.prev
-        return id
+    if(history.length > 1){
+        if(trackingHistoryIndex == -1){
+            trackingHistoryIndex = history.length - 2
+            return history[trackingHistoryIndex]
+        }else if(trackingHistoryIndex > 0){
+            trackingHistoryIndex--
+            return history[trackingHistoryIndex]
+        }else{
+            return history[trackingHistoryIndex]
+        }
     }
 }
 

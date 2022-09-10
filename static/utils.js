@@ -2,7 +2,7 @@
 const createPlaylistModal = new bootstrap.Modal(document.getElementById('addPlaylist'))
 const delPlaylistModal = new bootstrap.Modal(document.getElementById('delPlaylist'))
 const addSongModal = new bootstrap.Modal(document.getElementById('addSongPlaylist'))
-const opsTemplate = '<button class="icon float-end" type="button" onclick="event.stopPropagation()" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></button><ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton1"><li><a class="dropdown-item" href="javascript:event.stopPropagation();enqueue({id})">Enqueue</a></li><li><a class="dropdown-item" href="javascript:addSong({id}, {name}, {artist}, {thumb})" onclick="event.stopPropagation();">Add to playlist</a></li><li><a class="dropdown-item" href="javascript:event.stopPropagation();delSong({id})">Remove from playlist</a></li></ul>'
+const opsTemplate = '<button class="icon float-end" type="button" onclick="event.stopPropagation()" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></button><ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton1"><li><a class="dropdown-item" href="javascript:enqueue({id})">Enqueue</a></li><li><a class="dropdown-item" href="javascript:addSong({id}, {name}, {artist}, {thumb})">Add to playlist</a></li><li><a class="dropdown-item" href="javascript:delSong({id})">Remove from playlist</a></li></ul>'
 let playlistOpen = false
 
 window.playlist.listAll()
@@ -96,12 +96,12 @@ const insertSongs = (songs) => {
 
 const htmlFromSong = (song, songID, i) => {
     let ops = opsTemplate.replaceAll("{id}", `'${songID}'`)
-    ops = ops.replaceAll("{name}", `'${song.name.replaceAll("&#39;", "\\\'")}'`)
-    ops = ops.replaceAll("{artist}", `'${song.artist.replaceAll("&#39;", "\'")}'`)
-    ops = ops.replace("{thumb}", `'${song.thumbnail.replaceAll("&#39;", "\\'")}'`)
+    ops = ops.replaceAll("{name}", `'${song.name.replaceAll(/(&#39;|')/g, "\\\'")}'`)
+    ops = ops.replaceAll("{artist}", `'${song.artist.replaceAll(/(&#39;|')/g, "\\\'")}'`)
+    ops = ops.replace("{thumb}", `'${song.thumbnail.replaceAll(/(&#39;|')/g, "\\\'")}'`)
     const row = document.createElement("tr")
     row.id = songID
-    row.setAttribute("onclick", "startSong(this)")
+    row.setAttribute("onclick", "if(event.target.nodeName != 'A')startSong(this)")
     row.setAttribute("class", "song")
     row.innerHTML = `<td class="text-overflow">${i+1}</td>` +
                     `<td><img src="${song.thumbnail}" width="40" height="40"/></td>` + 
@@ -140,7 +140,7 @@ const confirmAddSong = () => {
     window.song.add(submit.dataset.id, submit.dataset.name, submit.dataset.artist, submit.dataset.img, playlist)
 }
 
-const enqueue = (songID) => window.song.enqueue(songID)
+const enqueue = (songID) => window.song.enqueue(songID, true, false)
 
 const search = async (event) => {
     const query = searchbar.value.toLowerCase()

@@ -61,15 +61,15 @@ shuffleBtn.onclick = () => {
 }
 
 //Helper functions
-const startSong = (row) => {
-    let nextSong = row.nextElementSibling
+const startSong = async (row) => {
+    let nextSong = row
     let clear = true
     while(nextSong){
         window.song.enqueue(nextSong.id, false, clear)
         nextSong = nextSong.nextElementSibling
         clear = false
     }
-    play(row.id)
+    play(await window.song.next(priority=false))
 }
 
 const play = async (id) => {
