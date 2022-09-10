@@ -2,8 +2,9 @@
 const createPlaylistModal = new bootstrap.Modal(document.getElementById('addPlaylist'))
 const delPlaylistModal = new bootstrap.Modal(document.getElementById('delPlaylist'))
 const addSongModal = new bootstrap.Modal(document.getElementById('addSongPlaylist'))
-const opsTemplate = '<button class="icon float-end" type="button" onclick="event.stopPropagation()" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></button><ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton1"><li><a class="dropdown-item" href="javascript:enqueue({id}, {name}, {artist}, {thumb})">Enqueue</a></li>{dequeue}<li><a class="dropdown-item" href="javascript:addSong({id}, {name}, {artist}, {thumb})">Add to playlist</a></li><li><a class="dropdown-item" href="javascript:delSong({id})">Remove from playlist</a></li></ul>'
+const opsTemplate = '<button class="icon float-end" type="button" onclick="event.stopPropagation()" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></button><ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton1"><li><a class="dropdown-item" href="javascript:enqueue({id}, {name}, {artist}, {thumb})">Enqueue</a></li>{dequeue}<li><a class="dropdown-item" href="javascript:addSong({id}, {name}, {artist}, {thumb})">Add to playlist</a></li>{remove}</ul>'
 const dequeueOption = '<li><a class="dropdown-item" href="#" onclick="dequeue({i}, this)">Dequeue</a></li>'
+const removePlaylistOption = '<li><a class="dropdown-item" href="javascript:delSong({id})">Remove from playlist</a></li>'
 let playlistOpen = false
 let queueOpen = false
 
@@ -108,9 +109,10 @@ const insertSongs = (songs) => {
     highlightSong()
 }
 
-const htmlFromSong = (song, songID, i, showDequeue=false) => {
+const htmlFromSong = (song, songID, i, showDequeue=false, showRemovePlaylist=false, fade=false) => {
     let ops = opsTemplate.replaceAll("{id}", `'${songID}'`)
     ops = ops.replace("{dequeue}", showDequeue ? dequeueOption : "")
+    ops = ops.replace("{remove}", showRemovePlaylist ? removePlaylistOption : "")
     ops = ops.replace("{i}", i)
     ops = ops.replaceAll("{name}", `'${song.name.replaceAll(/(&#39;|')/g, "\\\'")}'`)
     ops = ops.replaceAll("{artist}", `'${song.artist.replaceAll(/(&#39;|')/g, "\\\'")}'`)
@@ -119,7 +121,7 @@ const htmlFromSong = (song, songID, i, showDequeue=false) => {
     const row = document.createElement("tr")
     row.id = songID
     row.setAttribute("onclick", "if(event.target.nodeName != 'A')startSong(this)")
-    row.setAttribute("class", "song")
+    row.setAttribute("class", `song ${fade ? "row-fade" : ""}`)
     row.innerHTML = `<td class="text-overflow">${i+1}</td>` +
                     `<td><img src="${song.thumbnail}" width="40" height="40"/></td>` + 
                     `<td class="text-overflow">${song.name}</td>` +
@@ -172,7 +174,6 @@ const dequeue = async (i, node) => {
 }
 
 const search = async (live=false) => {
-    console.log("here")
     const query = searchbar.value.toLowerCase()
     document.getElementById("search-content").style.display =  query == "" ? "none" : "flex"
     const playlists = await window.playlist.getAll()
@@ -185,6 +186,8 @@ const search = async (live=false) => {
         if(playlist.toLowerCase().includes(query)){
             playlistFound = true
             const row = document.createElement("tr")
+            row.id =`${playlist}-playlist`
+            row.setAttribute("onclick", "document.getElementById('search-content').style.display = 'none';openPlaylist(this)")
             row.setAttribute("style", "cursor:pointer")
             row.innerHTML = `<td><img src="${playlists[playlist].thumbnail}" width="48" height="48"/></td><td class="text-overflow w-100">${playlist}</td>`
             pt.appendChild(row)
@@ -193,7 +196,7 @@ const search = async (live=false) => {
         Object.keys(songs).forEach((song) => {
             if(songs[song].name.toLowerCase().includes(query) || songs[song].artist.toLowerCase().includes(query)){
                 songFound = true
-                const html = htmlFromSong(songs[song], song, i)
+                const html = htmlFromSong(songs[song], song, i, showDequeue=false, showRemovePlaylist=false)
                 i++
                 st.appendChild(html)
             }
@@ -232,7 +235,7 @@ const search = async (live=false) => {
             nl.style.visibility = "hidden"
         }
         songs.forEach((song, i) => {
-            lt.appendChild(htmlFromSong(song, song.id, i))
+            lt.appendChild(htmlFromSong(song, song.id, i, showDequeue=false, showRemovePlaylist=false, fade=true))
         })
     }
     highlightSong()
