@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron")
+const { app, BrowserWindow, ipcMain, nativeImage } = require("electron")
 const song = require("./song")
 const path = require("path")
 const fs = require("fs")
@@ -12,6 +12,7 @@ function createWindow (save) {
         minWidth: 900,
         minHeight: 600,
         autoHideMenuBar: true,
+        icon: nativeImage.createFromPath(path.join(__dirname, "..", "static", "icon.png")),
         webPreferences: {
             preload: path.join(__dirname, "preload.js")
         }
@@ -20,7 +21,7 @@ function createWindow (save) {
     registerAPI(save)
     win.maximize()
     win.loadFile(path.join("templates", "index.html"))
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {

@@ -25,7 +25,8 @@ exports.search = async (query) => {
         })
         return searchResults
     }else{
-        return false
+        rotate_key()
+        search()
     }
 }
 
@@ -69,9 +70,16 @@ const decipherStreamData = async (html, signatureCipher) => {
         cipherCode = decipherCode(cipherCode)
 
         let streamURL = signatureCipher.match('https.*')[0]
-        streamURL = `${decodeURIComponent(decodeURIComponent(streamURL))}&sig=${cipherCode}`
+        streamURL = `${decode(streamURL)}&sig=${cipherCode}`
         return streamURL
     }
+}
+
+const decode = (url) => {
+    while(url.includes("%")){
+        url = decodeURIComponent(url)
+    }
+    return url
 }
 
 const rotate_key = () => keyIndex = keyIndex == keys.length ? 0 : keyIndex++ 
