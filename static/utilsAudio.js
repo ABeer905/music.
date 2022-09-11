@@ -26,6 +26,7 @@ player.onended = async () => {
         next()
     }
 }
+player.onerror = () => play(stream.id)
 
 time.oninput = () => {
     timeDragging = true
