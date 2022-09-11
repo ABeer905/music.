@@ -103,17 +103,18 @@ const closePlaylist = () => {
 const insertSongs = (songs) => {
     document.getElementById("song-container").replaceChildren()
     Object.keys(songs).forEach((song, i) => {
-        const html = htmlFromSong(songs[song], song, i)
+        const html = htmlFromSong(songs[song], song, i, showDequeue=false, showRemovePlaylist=true)
         document.getElementById("song-container").appendChild(html)
     })
     highlightSong()
 }
 
 const htmlFromSong = (song, songID, i, showDequeue=false, showRemovePlaylist=false, fade=false) => {
-    let ops = opsTemplate.replaceAll("{id}", `'${songID}'`)
+    let ops = opsTemplate
     ops = ops.replace("{dequeue}", showDequeue ? dequeueOption : "")
     ops = ops.replace("{remove}", showRemovePlaylist ? removePlaylistOption : "")
     ops = ops.replace("{i}", i)
+    ops = ops.replaceAll("{id}", `'${songID}'`)
     ops = ops.replaceAll("{name}", `'${song.name.replaceAll(/(&#39;|')/g, "\\\'")}'`)
     ops = ops.replaceAll("{artist}", `'${song.artist.replaceAll(/(&#39;|')/g, "\\\'")}'`)
     ops = ops.replaceAll("{thumb}", `'${song.thumbnail.replaceAll(/(&#39;|')/g, "\\\'")}'`)

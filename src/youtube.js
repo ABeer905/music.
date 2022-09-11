@@ -11,22 +11,24 @@ exports.init = (apiKeys) => keys = apiKeys
 exports.search = async (query) => {
     let url = searchURL.replace("{query}", query)
     url = url.replace("{API_KEY}", keys[keyIndex])
-    const res = await axios.get(url)
-    if(res.status == 200){
-        const data = res.data
-        const searchResults = []
-        data.items.forEach(e => {
-            searchResults.push({
-                id: e.id.videoId,
-                name: e.snippet.title,
-                artist: e.snippet.channelTitle,
-                thumbnail: e.snippet.thumbnails.default.url
+    try{
+        const res = await axios.get(url)
+        if(res.status == 200){
+            const data = res.data
+            const searchResults = []
+            data.items.forEach(e => {
+                searchResults.push({
+                    id: e.id.videoId,
+                    name: e.snippet.title,
+                    artist: e.snippet.channelTitle,
+                    thumbnail: e.snippet.thumbnails.default.url
+                })
             })
-        })
-        return searchResults
-    }else{
+            return searchResults
+        }   
+    }catch(e) {
         rotate_key()
-        search()
+        return await this.search(query)
     }
 }
 
