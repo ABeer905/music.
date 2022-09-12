@@ -3,7 +3,7 @@ const song = require("./song")
 const path = require("path")
 const fs = require("fs")
 
-const savePath = path.join(__dirname, "save.json")
+const savePath = path.join(__dirname, "..", "..", "save.json")
 let fileLock = false
 let fileQueue = []
 
@@ -29,8 +29,8 @@ app.whenReady().then(() => {
     if(fs.existsSync(savePath)){
         save = require(savePath)
     }else{
-        keys = []
         save = {
+            keys: [],
             playlists: {}
         }
         write(save)

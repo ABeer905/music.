@@ -6,6 +6,8 @@
   "scripts": {
     "start": "electron .",
     "build-linux": "electron-packager . --platform=linux --icon=static\\icon.png --ignore=.gitignore --ignore=save.json --ignore=playlist_images --overwrite",
+    "build-windows": "electron-packager . --platform=win32 --icon=static\\icon.png --ignore=.gitignore --ignore=save.json --ignore=playlist_images --overwrite",
+    "build-mac": "electron-packager . --platform=win32 --icon=static\\icon.png --ignore=.gitignore --ignore=save.json --ignore=playlist_images --overwrite",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
