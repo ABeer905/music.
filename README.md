@@ -11,6 +11,11 @@ music. is a online music streaming service with features common of other audio s
 1. music. does not operate any online servers, therefore there is no online sync or social features.
 2. Prone to breaking in the future if YouTube changes their approach to cipher stream urls.
 
+# Screenshots
+![](screenshots/1.png)
+![](screenshots/2.png)
+![](screenshots/3.png)
+
 # Installation
 1. Clone and navigate to the music. directory
 2. Type: ```npm install```
