@@ -5,7 +5,7 @@ Online music streaming desktop application.
 music. is a online music streaming service with features common of other audio streaming services such as shuffle play, repeat, playlist management, and a queue system. music. works by operating via the YouTube library meaning you have access to anything found on YouTube.
 ### music. Pros:
 1. No ads
-2. Unlimited downloads
+2. Unlimited downloads (Currently IOS only)
 3. Compared to other music streaming services, music. uses the YouTube api which means you will gain additional access to content that often can't be on other services like Spotify such as copyrighted remixes, parodies, or other user generated content.
 ### music. Cons:
 1. music. does not operate any online servers, therefore there is no online sync or social features.
