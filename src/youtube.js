@@ -59,13 +59,13 @@ const getStreamDetails = async (html) => {
 const decipherStreamData = async (html, signatureCipher) => {
     const regex = /=\"\/s\/.*\/player_ias\.vflset\/en_US\/base.js/ //URL containing script to decode signature cipher
     const url = `https://youtube.com${html.match(regex)[0].substring(2)}`
-    console.log(url)
+    //console.log(url)
     const res =  await axios.get(url)
     if(res.status == 200){
         const baseJS = res.data
         const decipherFunc = baseJS.match(/function\(a\){a=a.split\(""\);.*return a.join\(""\)};/)[0]
         const objName = decipherFunc.substring(26, 28)
-        const decipherDefinitions = baseJS.match(new RegExp(`var ${objName}={(.|\\n)*[a-zA-Z0-9][a-zA-Z0-9][:]function\\(a,b\\){.*}};`))[0]
+        const decipherDefinitions = baseJS.match(new RegExp(`var ${objName}={(.|\\n)*[a-zA-Z0-9][a-zA-Z0-9][:]function\\((a|a,b)\\){.*}};`))[0]
         eval(decipherDefinitions)
         eval(`var decipherCode = ${decipherFunc}`)
         
